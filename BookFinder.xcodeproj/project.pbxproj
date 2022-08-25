@@ -9,11 +9,17 @@
 /* Begin PBXBuildFile section */
 		49BD0D6F28B75B5B00D41CF1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49BD0D6E28B75B5B00D41CF1 /* AppDelegate.swift */; };
 		49BD0D7128B75B5B00D41CF1 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49BD0D7028B75B5B00D41CF1 /* SceneDelegate.swift */; };
-		49BD0D7328B75B5B00D41CF1 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49BD0D7228B75B5B00D41CF1 /* ViewController.swift */; };
+		49BD0D7328B75B5B00D41CF1 /* BookFinderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49BD0D7228B75B5B00D41CF1 /* BookFinderViewController.swift */; };
 		49BD0D7828B75B5D00D41CF1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 49BD0D7728B75B5D00D41CF1 /* Assets.xcassets */; };
 		49BD0D8628B75B5D00D41CF1 /* BookFinderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49BD0D8528B75B5D00D41CF1 /* BookFinderTests.swift */; };
 		49BD0D9028B75B5D00D41CF1 /* BookFinderUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49BD0D8F28B75B5D00D41CF1 /* BookFinderUITests.swift */; };
 		49BD0D9228B75B5D00D41CF1 /* BookFinderUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49BD0D9128B75B5D00D41CF1 /* BookFinderUITestsLaunchTests.swift */; };
+		49BD0DA428B76D7D00D41CF1 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 49BD0DA328B76D7D00D41CF1 /* SnapKit */; };
+		49BD0DA628B7769100D41CF1 /* BookCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49BD0DA528B7769100D41CF1 /* BookCell.swift */; };
+		49BD0DA928B7776300D41CF1 /* UITableView+Reusable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49BD0DA828B7776300D41CF1 /* UITableView+Reusable.swift */; };
+		49BD0DAB28B7A0CE00D41CF1 /* BookDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49BD0DAA28B7A0CD00D41CF1 /* BookDetailView.swift */; };
+		49BD0DAD28B7AEA300D41CF1 /* EmptyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49BD0DAC28B7AEA300D41CF1 /* EmptyCell.swift */; };
+		49BD0DB028B7B21300D41CF1 /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = 49BD0DAF28B7B21300D41CF1 /* Then */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,7 +43,7 @@
 		49BD0D6B28B75B5B00D41CF1 /* BookFinder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BookFinder.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		49BD0D6E28B75B5B00D41CF1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		49BD0D7028B75B5B00D41CF1 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		49BD0D7228B75B5B00D41CF1 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		49BD0D7228B75B5B00D41CF1 /* BookFinderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookFinderViewController.swift; sourceTree = "<group>"; };
 		49BD0D7728B75B5D00D41CF1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		49BD0D7C28B75B5D00D41CF1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		49BD0D8128B75B5D00D41CF1 /* BookFinderTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BookFinderTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -45,6 +51,10 @@
 		49BD0D8B28B75B5D00D41CF1 /* BookFinderUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BookFinderUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		49BD0D8F28B75B5D00D41CF1 /* BookFinderUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookFinderUITests.swift; sourceTree = "<group>"; };
 		49BD0D9128B75B5D00D41CF1 /* BookFinderUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookFinderUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		49BD0DA528B7769100D41CF1 /* BookCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookCell.swift; sourceTree = "<group>"; };
+		49BD0DA828B7776300D41CF1 /* UITableView+Reusable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+Reusable.swift"; sourceTree = "<group>"; };
+		49BD0DAA28B7A0CD00D41CF1 /* BookDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookDetailView.swift; sourceTree = "<group>"; };
+		49BD0DAC28B7AEA300D41CF1 /* EmptyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,6 +62,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				49BD0DA428B76D7D00D41CF1 /* SnapKit in Frameworks */,
+				49BD0DB028B7B21300D41CF1 /* Then in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -96,6 +108,7 @@
 			isa = PBXGroup;
 			children = (
 				49BD0D9E28B75B7900D41CF1 /* Apps */,
+				49BD0DA728B776F700D41CF1 /* Extensions */,
 				49BD0DA128B75BD800D41CF1 /* Resources */,
 				49BD0DA028B75B9600D41CF1 /* Scenes */,
 			);
@@ -131,7 +144,10 @@
 		49BD0DA028B75B9600D41CF1 /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
-				49BD0D7228B75B5B00D41CF1 /* ViewController.swift */,
+				49BD0DA528B7769100D41CF1 /* BookCell.swift */,
+				49BD0DAA28B7A0CD00D41CF1 /* BookDetailView.swift */,
+				49BD0D7228B75B5B00D41CF1 /* BookFinderViewController.swift */,
+				49BD0DAC28B7AEA300D41CF1 /* EmptyCell.swift */,
 			);
 			path = Scenes;
 			sourceTree = "<group>";
@@ -143,6 +159,14 @@
 				49BD0D7C28B75B5D00D41CF1 /* Info.plist */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		49BD0DA728B776F700D41CF1 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				49BD0DA828B7776300D41CF1 /* UITableView+Reusable.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -161,6 +185,10 @@
 			dependencies = (
 			);
 			name = BookFinder;
+			packageProductDependencies = (
+				49BD0DA328B76D7D00D41CF1 /* SnapKit */,
+				49BD0DAF28B7B21300D41CF1 /* Then */,
+			);
 			productName = BookFinder;
 			productReference = 49BD0D6B28B75B5B00D41CF1 /* BookFinder.app */;
 			productType = "com.apple.product-type.application";
@@ -233,6 +261,10 @@
 				Base,
 			);
 			mainGroup = 49BD0D6228B75B5B00D41CF1;
+			packageReferences = (
+				49BD0DA228B76D7D00D41CF1 /* XCRemoteSwiftPackageReference "SnapKit" */,
+				49BD0DAE28B7B21300D41CF1 /* XCRemoteSwiftPackageReference "Then" */,
+			);
 			productRefGroup = 49BD0D6C28B75B5B00D41CF1 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -274,8 +306,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				49BD0D7328B75B5B00D41CF1 /* ViewController.swift in Sources */,
+				49BD0DA928B7776300D41CF1 /* UITableView+Reusable.swift in Sources */,
+				49BD0D7328B75B5B00D41CF1 /* BookFinderViewController.swift in Sources */,
+				49BD0DA628B7769100D41CF1 /* BookCell.swift in Sources */,
+				49BD0DAD28B7AEA300D41CF1 /* EmptyCell.swift in Sources */,
 				49BD0D6F28B75B5B00D41CF1 /* AppDelegate.swift in Sources */,
+				49BD0DAB28B7A0CE00D41CF1 /* BookDetailView.swift in Sources */,
 				49BD0D7128B75B5B00D41CF1 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -593,6 +629,38 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		49BD0DA228B76D7D00D41CF1 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
+		49BD0DAE28B7B21300D41CF1 /* XCRemoteSwiftPackageReference "Then" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/devxoul/Then";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		49BD0DA328B76D7D00D41CF1 /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 49BD0DA228B76D7D00D41CF1 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+		49BD0DAF28B7B21300D41CF1 /* Then */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 49BD0DAE28B7B21300D41CF1 /* XCRemoteSwiftPackageReference "Then" */;
+			productName = Then;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 49BD0D6328B75B5B00D41CF1 /* Project object */;
 }
