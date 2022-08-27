@@ -19,10 +19,13 @@ struct Volume: Decodable {
 
 extension Volume {
   struct List: Decodable {
-    let kind: String
-    let items: [Volume]
+    let items: [Volume]?
     let totalItems: Int
   }
+}
+
+extension Volume.List {
+  static let empty = Volume.List(items: nil, totalItems: 0)
 }
 
 extension Volume {
@@ -31,7 +34,7 @@ extension Volume {
     let subtitle: String?
     let authors: [String]?
     let publisher: String?
-    let publishedDate: String
+    let publishedDate: String?
     let description: String?
     let imageLinks: ImageLinks?
   }

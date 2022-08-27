@@ -8,11 +8,13 @@
 import UIKit
 import SnapKit
 import Then
+import Kingfisher
 
 class BookCell: UITableViewCell, Reusable {
   
   let pictureView = UIImageView().then {
-    $0.backgroundColor = .gray
+    $0.backgroundColor = .lightGray
+    $0.contentMode = .scaleAspectFit
   }
   let titleLabel = UILabel().then {
     $0.text = "Book Title"
@@ -43,6 +45,11 @@ class BookCell: UITableViewCell, Reusable {
   
   override func prepareForReuse() {
     super.prepareForReuse()
+    
+    pictureView.kf.cancelDownloadTask()
+    pictureView.kf.setImage(with: URL(string: ""))
+    pictureView.image = nil
+    pictureView.backgroundColor = .lightGray
   }
 }
 
@@ -84,6 +91,28 @@ extension BookCell {
       $0.leading.equalTo(authorLabel.snp.leading)
       $0.trailing.equalTo(authorLabel.snp.trailing)
       $0.bottom.equalTo(pictureView.snp.bottom)
+    }
+  }
+}
+
+extension BookCell {
+  func configure(_ volume: Volume) {
+    // Lables
+    titleLabel.text = volume.info.title
+    authorLabel.text = volume.info.authors?.joined(separator: ", ") ?? "Unknown Author"
+    dateLabel.text = volume.info.publishedDate ?? "No Published Date"
+    
+    // Thumbnail
+    guard let link = volume.info.imageLinks?.smallThumbnail.replacingOccurrences(of: "http", with: "https") else { return }
+
+    let url = URL(string: link)
+    
+    pictureView.kf.setImage(with: url) { [weak self] result in
+      guard let self = self else { return }
+      guard case .success = result else { return }
+      self.pictureView.backgroundColor = .clear
+      self.setNeedsLayout()
+      self.layoutIfNeeded()
     }
   }
 }

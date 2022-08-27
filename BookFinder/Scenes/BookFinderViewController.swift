@@ -9,6 +9,9 @@ import UIKit
 import SwiftUI
 import SnapKit
 import Then
+import Alamofire
+import RxSwift
+import RxCocoa
 
 class BookFinderViewController: UIViewController {
   
@@ -20,13 +23,19 @@ class BookFinderViewController: UIViewController {
   
   let searchController = UISearchController().then {
     $0.searchBar.placeholder = "Search books"
+    $0.searchBar.searchTextField.autocapitalizationType = .none
   }
+    
+  let viewModel = BookViewModel()
+  
+  private var disposeBag = DisposeBag()
 
   override func viewDidLoad() {
     super.viewDidLoad()
    
     setupViews()
     setupConstraints()
+    bindUIs()
   }
 }
 
@@ -37,37 +46,61 @@ extension BookFinderViewController {
     navigationItem.hidesSearchBarWhenScrolling = false
     navigationController?.navigationBar.prefersLargeTitles = true
     
-    tableView.dataSource = self
-    tableView.delegate = self
-    
     view.addSubview(tableView)
   }
   
   func setupConstraints() {
     tableView.snp.makeConstraints {
-      $0.leading.top.bottom.trailing.equalTo(view)
+      $0.edges.equalTo(view)
     }
   }
-}
-
-extension BookFinderViewController: UITableViewDataSource {
-  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return 100
-  }
   
-  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    let cell = tableView.dequeueReusableCell(for: indexPath) as BookCell
+  func bindUIs() {
+    viewModel.volumes.asDriver()
+      .drive(tableView.rx.items(cellIdentifier: BookCell.reuseIdentifier, cellType: BookCell.self),
+             curriedArgument: configureCell)
+      .disposed(by: disposeBag)
     
-    return cell
-  }
-}
-
-extension BookFinderViewController: UITableViewDelegate {
-  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    tableView.deselectRow(at: indexPath, animated: true)
+    tableView.rx.itemSelected.asDriver()
+      .drive(onNext: deselectRow)
+      .disposed(by: disposeBag)
+      
+    tableView.rx.modelSelected(Volume.self).asDriver()
+      .drive(onNext: showDetail)
+      .disposed(by: disposeBag)
     
-    let view = BookDetailView()
-    let vc = UIHostingController(rootView: view)
-    navigationController?.pushViewController(vc, animated: true)
+    tableView.rx.prefetchRows
+      .compactMap(\.last?.row)
+      .subscribe(onNext: prefetchRows)
+      .disposed(by: disposeBag)
+    
+    let searchBar = searchController.searchBar
+    
+    searchBar.rx.searchButtonClicked
+      .`do`(onNext: viewModel.reset)
+      .map({ searchBar.text ?? "" })
+      .subscribe(onNext: viewModel.search)
+      .disposed(by: disposeBag)
+    
+    func configureCell(row: Int, volume: Volume, cell: BookCell) {
+      cell.configure(volume)
+    }
+    
+    func deselectRow(at indexPath: IndexPath) {
+      tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    func showDetail(of volume: Volume) {
+      let view = BookDetailView()
+      let vc = UIHostingController(rootView: view)
+      navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func prefetchRows(row: Int) {
+      guard row == viewModel.volumes.value.count - 1 else { return }
+      
+      let lastest = viewModel.searchText
+      viewModel.search(for: lastest)
+    }
   }
 }

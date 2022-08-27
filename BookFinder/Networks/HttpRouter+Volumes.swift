@@ -10,7 +10,7 @@ import Alamofire
 
 extension HttpRouter {
   enum Volumes {
-    case search(terms: String, index: Int = 0, counts: Int = 20)
+    case search(text: String, index: Int = 0, counts: Int = 20)
     case detail(id: String)
   }
 }
@@ -29,9 +29,9 @@ extension HttpRouter.Volumes: HttpRoutable {
   }
   
   var parameters: Parameters? {
-    guard case let .search(terms, index, counts) = self else { return nil }
+    guard case let .search(text, index, counts) = self else { return nil }
     return Parameters([
-      "q": terms,
+      "q": "intitle:\(text)",
       "startIndex": "\(index)",
       "maxResults": "\(counts)"
     ])
