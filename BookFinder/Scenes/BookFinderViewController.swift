@@ -56,6 +56,10 @@ extension BookFinderViewController {
   }
   
   func bindUIs() {
+    viewModel.totalItems.asDriver()
+      .drive(navigationItem.rx.prompt)
+      .disposed(by: disposeBag)
+    
     viewModel.volumes.asDriver()
       .drive(tableView.rx.items(cellIdentifier: BookCell.reuseIdentifier, cellType: BookCell.self),
              curriedArgument: configureCell)

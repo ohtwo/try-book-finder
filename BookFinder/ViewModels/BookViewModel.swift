@@ -14,7 +14,7 @@ import RxCocoa
 class BookViewModel {
   
   var volumes = BehaviorRelay<[Volume]>(value: [])
-  var totalItems = BehaviorRelay<Int>(value: 0)
+  var totalItems = BehaviorRelay<String?>(value: nil)
   var searchText = BehaviorRelay<String>(value: "")
   
   private(set) var disposeBag = DisposeBag()
@@ -39,6 +39,7 @@ extension BookViewModel {
       .share()
     
     shared.map(\.totalItems)
+      .map({ $0 > 0 ? String("\($0) results") : nil })
       .bind(to: totalItems)
       .disposed(by: disposeBag)
         
@@ -57,5 +58,6 @@ extension BookViewModel {
     
   func reset(_: String) {
     volumes.accept([])
+    totalItems.accept(nil)
   }
 }
