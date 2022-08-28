@@ -18,6 +18,8 @@ struct Volume: Decodable {
 }
 
 extension Volume {
+  static let empty = Volume(id: "", info: .empty)
+  
   struct List: Decodable {
     let items: [Volume]?
     let totalItems: Int
@@ -48,6 +50,15 @@ extension Volume.Info {
 }
 
 extension Volume.Info {
+  static let empty = Volume.Info(
+    title: "",
+    subtitle: nil,
+    authors: nil,
+    publisher: nil,
+    publishedDate: nil,
+    description: nil,
+    imageLinks: nil)
+  
   var authorsText: String {
     return authors?.joined(separator: ", ") ?? "Unknown Author"
   }

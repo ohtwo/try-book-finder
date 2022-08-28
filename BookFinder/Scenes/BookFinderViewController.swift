@@ -17,8 +17,9 @@ class BookFinderViewController: UIViewController {
   
   let tableView = UITableView().then {
     $0.register(BookCell.self)
+    $0.register(LoadingCell.self)
+    $0.register(EmptyCell.self)
     $0.rowHeight = UITableView.automaticDimension
-    $0.clearsContextBeforeDrawing = true
   }
   
   let searchController = UISearchController().then {
@@ -61,15 +62,14 @@ extension BookFinderViewController {
       .disposed(by: disposeBag)
     
     viewModel.volumes.asDriver()
-      .drive(tableView.rx.items(cellIdentifier: BookCell.reuseIdentifier, cellType: BookCell.self),
-             curriedArgument: configureCell)
+      .drive(tableView.rx.items, curriedArgument: configureCell)
       .disposed(by: disposeBag)
-    
+        
     tableView.rx.itemSelected.asDriver()
       .drive(onNext: deselectRow)
       .disposed(by: disposeBag)
       
-    tableView.rx.modelSelected(Volume.self).asDriver()
+    tableView.rx.modelSelected(BookViewModel.State.self).asDriver()
       .drive(onNext: showDetail)
       .disposed(by: disposeBag)
     
@@ -85,16 +85,31 @@ extension BookFinderViewController {
       .`do`(onNext: viewModel.reset)
       .subscribe(onNext: viewModel.search)
       .disposed(by: disposeBag)
-    
-    func configureCell(row: Int, volume: Volume, cell: BookCell) {
-      cell.configure(volume)
+        
+    func configureCell(tableView: UITableView, row: Int, state: BookViewModel.State) -> UITableViewCell {
+      let indexPath = IndexPath(row: row, section: 0)
+      
+      switch state {
+      case let .result(volume):
+        let cell = tableView.dequeueReusableCell(for: indexPath) as BookCell
+        cell.configure(volume)
+        return cell
+        
+      case .loading:
+        return tableView.dequeueReusableCell(for: indexPath) as LoadingCell
+        
+      case .empty:
+        return tableView.dequeueReusableCell(for: indexPath) as EmptyCell
+      }
     }
     
     func deselectRow(at indexPath: IndexPath) {
       tableView.deselectRow(at: indexPath, animated: true)
     }
     
-    func showDetail(of volume: Volume) {
+    func showDetail(of state: BookViewModel.State) {
+      guard case .result(let volume) = state else { return }
+      
       let view = BookDetailView(volume: volume)
       let vc = UIHostingController(rootView: view)
       navigationController?.pushViewController(vc, animated: true)
