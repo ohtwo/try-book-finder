@@ -57,11 +57,11 @@ extension BookFinderViewController {
   }
   
   func bindUIs() {
-    viewModel.totalItems.asDriver()
+    viewModel.resultText.asDriver()
       .drive(navigationItem.rx.prompt)
       .disposed(by: disposeBag)
     
-    viewModel.volumes.asDriver()
+    viewModel.items.asDriver()
       .drive(tableView.rx.items, curriedArgument: configureCell)
       .disposed(by: disposeBag)
         
@@ -69,7 +69,7 @@ extension BookFinderViewController {
       .drive(onNext: deselectRow)
       .disposed(by: disposeBag)
       
-    tableView.rx.modelSelected(BookViewModel.State.self).asDriver()
+    tableView.rx.modelSelected(BookViewModel.Item.self).asDriver()
       .drive(onNext: showDetail)
       .disposed(by: disposeBag)
     
@@ -86,7 +86,7 @@ extension BookFinderViewController {
       .subscribe(onNext: viewModel.search)
       .disposed(by: disposeBag)
         
-    func configureCell(tableView: UITableView, row: Int, state: BookViewModel.State) -> UITableViewCell {
+    func configureCell(tableView: UITableView, row: Int, state: BookViewModel.Item) -> UITableViewCell {
       let indexPath = IndexPath(row: row, section: 0)
       
       switch state {
@@ -107,7 +107,7 @@ extension BookFinderViewController {
       tableView.deselectRow(at: indexPath, animated: true)
     }
     
-    func showDetail(of state: BookViewModel.State) {
+    func showDetail(of state: BookViewModel.Item) {
       guard case .result(let volume) = state else { return }
       
       let view = BookDetailView(volume: volume)
@@ -116,7 +116,7 @@ extension BookFinderViewController {
     }
     
     func prefetchRows(row: Int) {
-      guard row == viewModel.volumes.value.count - 1 else { return }
+      guard row == viewModel.items.value.count - 1 else { return }
       guard let text = searchController.searchBar.text else { return }
       
       viewModel.search(for: text)
