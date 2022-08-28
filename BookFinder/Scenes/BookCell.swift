@@ -13,24 +13,25 @@ import Kingfisher
 class BookCell: UITableViewCell, Reusable {
   
   let pictureView = UIImageView().then {
-    $0.backgroundColor = .lightGray
     $0.contentMode = .scaleAspectFit
+    $0.tintColor = .lightGray
   }
   let titleLabel = UILabel().then {
-    $0.text = "Book Title"
-    $0.font = .preferredFont(forTextStyle: .title1)
+    $0.font = .preferredFont(forTextStyle: .title3)
     $0.textColor = .darkText
+    $0.numberOfLines = 2
+    $0.adjustsFontSizeToFitWidth = true
+    $0.minimumScaleFactor = 0.9
   }
   let authorLabel = UILabel().then {
-    $0.text = "Author"
     $0.font = .preferredFont(forTextStyle: .headline)
     $0.textColor = .darkGray
   }
   let dateLabel = UILabel().then {
-    $0.text = "Published Date"
     $0.font = .preferredFont(forTextStyle: .subheadline)
     $0.textColor = .lightGray
   }
+  let placeholder = UIImage(systemName: "photo.artframe")
 
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -49,7 +50,6 @@ class BookCell: UITableViewCell, Reusable {
     pictureView.kf.cancelDownloadTask()
     pictureView.kf.setImage(with: URL(string: ""))
     pictureView.image = nil
-    pictureView.backgroundColor = .lightGray
   }
 }
 
@@ -97,20 +97,13 @@ extension BookCell {
 
 extension BookCell {
   func configure(_ volume: Volume) {
-    // Lables
     titleLabel.text = volume.info.title
-    authorLabel.text = volume.info.authors?.joined(separator: ", ") ?? "Unknown Author"
-    dateLabel.text = volume.info.publishedDate ?? "No Published Date"
+    authorLabel.text = volume.info.authorsText
+    dateLabel.text = volume.info.publishedDateText
     
-    // Thumbnail
-    guard let link = volume.info.imageLinks?.smallThumbnail.replacingOccurrences(of: "http", with: "https") else { return }
-
-    let url = URL(string: link)
-    
-    pictureView.kf.setImage(with: url) { [weak self] result in
+    pictureView.kf.setImage(with: volume.info.smallThumbnailURL, placeholder: placeholder) { [weak self] result in
       guard let self = self else { return }
       guard case .success = result else { return }
-      self.pictureView.backgroundColor = .clear
       self.setNeedsLayout()
       self.layoutIfNeeded()
     }

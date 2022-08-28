@@ -91,7 +91,7 @@ extension BookFinderViewController {
     }
     
     func showDetail(of volume: Volume) {
-      let view = BookDetailView()
+      let view = BookDetailView(volume: volume)
       let vc = UIHostingController(rootView: view)
       navigationController?.pushViewController(vc, animated: true)
     }

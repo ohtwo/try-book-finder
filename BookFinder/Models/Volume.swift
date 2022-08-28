@@ -46,3 +46,31 @@ extension Volume.Info {
     let smallThumbnail: String
   }
 }
+
+extension Volume.Info {
+  var authorsText: String {
+    return authors?.joined(separator: ", ") ?? "Unknown Author"
+  }
+  
+  var publishedDateText: String {
+    return publishedDate ?? "No Published Date"
+  }
+  
+  var descriptionText: String {
+    return description ?? "No Description"
+  }
+  
+  var thumbnailURL: URL? {
+    guard let urlString = imageLinks?.thumbnail.replacingOccurrences(of: "http", with: "https") else {
+      return nil
+    }
+    return URL(string: urlString)
+  }
+  
+  var smallThumbnailURL: URL? {
+    guard let urlString = imageLinks?.smallThumbnail.replacingOccurrences(of: "http", with: "https") else {
+      return nil
+    }
+    return URL(string: urlString)
+  }
+}

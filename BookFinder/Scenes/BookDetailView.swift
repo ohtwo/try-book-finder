@@ -6,31 +6,43 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct BookDetailView: View {
+  let volume: Volume
+  
+  let noImage: some View = Image(systemName: "photo.artframe")
+    .resizable()
+    .aspectRatio(contentMode: .fit)
+    .frame(width: 100, height: 100)
+    .foregroundColor(Color(.lightGray))
+    
   var body: some View {
     ScrollView {
       VStack(alignment: .leading) {
         HStack(alignment: .top) {
-          Rectangle()
-            .fill(.gray)
+          KFImage.url(volume.info.smallThumbnailURL)
+            .placeholder({ noImage })
+            .resizable()
+            .aspectRatio(contentMode: .fit)
             .frame(width: 100, height: 100)
+          Spacer(minLength: 8)
           VStack(alignment: .leading) {
-            Text("Book Title")
-              .font(.title)
+            Text(volume.info.title)
+              .font(.title2)
               .foregroundColor(Color(.darkText))
               .padding(.bottom)
-            Text("Author")
+            Text(volume.info.authorsText)
               .font(.headline)
               .foregroundColor(Color(.darkGray))
-            Text("Published Date")
+            Text(volume.info.publishedDateText)
               .font(.subheadline)
               .foregroundColor(Color(.lightGray))
           }
           Spacer()
         }
         Divider()
-        Text(description)
+        Text(volume.info.descriptionText)
           .font(.body)
         Spacer()
       }
@@ -39,19 +51,3 @@ struct BookDetailView: View {
     .navigationBarTitleDisplayMode(.inline)
   }
 }
-
-struct BookDetailView_Previews: PreviewProvider {
-  static var previews: some View {
-    BookDetailView()
-  }
-}
-
-let description = """
-Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-
-Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-
-Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-
-Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-"""
