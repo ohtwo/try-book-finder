@@ -74,11 +74,11 @@ extension BookFinderViewController {
       .subscribe(onNext: prefetchRows)
       .disposed(by: disposeBag)
     
-    let searchBar = searchController.searchBar
-    
-    searchBar.rx.searchButtonClicked
+    searchController.searchBar.rx.text
+      .orEmpty
+      .throttle(.milliseconds(300), scheduler: MainScheduler.instance)
+      .distinctUntilChanged()
       .`do`(onNext: viewModel.reset)
-      .map({ searchBar.text ?? "" })
       .subscribe(onNext: viewModel.search)
       .disposed(by: disposeBag)
     
@@ -98,9 +98,9 @@ extension BookFinderViewController {
     
     func prefetchRows(row: Int) {
       guard row == viewModel.volumes.value.count - 1 else { return }
+      guard let text = searchController.searchBar.text else { return }
       
-      let lastest = viewModel.searchText
-      viewModel.search(for: lastest)
+      viewModel.search(for: text)
     }
   }
 }
