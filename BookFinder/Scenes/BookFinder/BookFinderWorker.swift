@@ -1,39 +1,33 @@
 //
-//  BookViewModel.swift
+//  BookFinderWorker.swift
 //  BookFinder
 //
-//  Created by Kang Byeonghak on 2022/08/27.
+//  Created by Kang Byeonghak on 2022/08/29.
 //
 
-import UIKit
+import Foundation
 import Alamofire
 import RxAlamofire
 import RxSwift
 import RxCocoa
 
-class BookViewModel {
+class BookFinderWorker {
   
-  enum Item {
-    case result(Volume)
-    case loading(Volume)
-    case empty
-  }
-  
-  var items = BehaviorRelay<[Item]>(value: [])
-  var resultText = BehaviorRelay<String?>(value: nil)
   var searchText = BehaviorRelay<String>(value: "")
+  var totalItems = BehaviorRelay<Int>(value: 0)
+  var items = BehaviorRelay<[Response.Item]>(value: [])
   
-  private(set) var disposeBag = DisposeBag()
+  private let disposeBag = DisposeBag()
   
   init() {
     bind()
   }
 }
 
-extension BookViewModel {
+extension BookFinderWorker {
   private func bind() {
     let shared = searchText
-      .flatMapLatest({ [weak self] text -> Observable<Volume.List> in
+      .flatMapLatest({ [weak self] (text) -> Observable<Volume.List> in
         guard let self = self else { return Observable.just(.empty) }
         guard text.count > 0 else { return Observable.just(.empty) }
         
@@ -45,30 +39,29 @@ extension BookViewModel {
       .share()
     
     shared.map(\.totalItems)
-      .map({ $0 > 0 ? String("\($0) results") : nil })
-      .bind(to: resultText)
+      .bind(to: totalItems)
       .disposed(by: disposeBag)
         
     shared.map(\.items)
-      .map({ [weak self] items -> [Item] in
+      .map({ [weak self] (items) -> [Response.Item] in
         guard let self = self else { return [] }
         let current = self.items.value.filter { state in
           guard case .result = state else { return false }
           return true
         }
-        let incomes: [Item] = items?.map({ .result($0) }) ?? [.empty]
+        let incomes: [Response.Item] = items?.map({ .result($0) }) ?? [.empty]
         return current + incomes
       })
       .bind(to: items)
       .disposed(by: disposeBag)
   }
   
-  func search(for text: String) {
-    searchText.accept(text)
+  func fetch(request: Request) {
+    searchText.accept(request.searchText)
   }
     
-  func reset(_: String) {
-    items.accept([Item](repeating: .loading(.empty), count: 20))
-    resultText.accept(nil)
+  func reset() {
+    items.accept([Response.Item](repeating: .loading(.empty), count: 20))
+    totalItems.accept(0)
   }
 }

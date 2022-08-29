@@ -108,4 +108,17 @@ extension BookCell {
       self.layoutIfNeeded()
     }
   }
+  
+  func configure(_ volume: ViewModel.Volume) {
+    titleLabel.text = volume.title
+    authorLabel.text = volume.authors
+    dateLabel.text = volume.publishedDate
+    
+    pictureView.kf.setImage(with: volume.imageURL, placeholder: placeholder) { [weak self] result in
+      guard let self = self else { return }
+      guard case .success = result else { return }
+      self.setNeedsLayout()
+      self.layoutIfNeeded()
+    }
+  }
 }

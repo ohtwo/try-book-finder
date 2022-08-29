@@ -18,6 +18,7 @@ extension HttpClient {
       .flatMap({
         HttpClient.request($0).rx.responseDecodable()
       })
-      .map({ $0.1 })    
+      .map({ $0.1 })
+      .debug(#function)
   }
 }

@@ -26,7 +26,8 @@ class EmptyCell: UITableViewCell, Reusable {
     contentView.addSubview(titleLabel)
     
     titleLabel.snp.makeConstraints {
-      $0.edges.equalTo(self)
+      $0.edges.equalTo(contentView)
+      $0.height.equalTo(50)
     }
   }
   

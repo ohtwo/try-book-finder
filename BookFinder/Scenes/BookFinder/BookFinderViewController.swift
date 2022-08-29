@@ -13,6 +13,10 @@ import Alamofire
 import RxSwift
 import RxCocoa
 
+protocol BookFinderViewable: AnyObject {
+  func displayFetchedBooks(viewModel: ViewModel)
+}
+
 class BookFinderViewController: UIViewController {
   
   let tableView = UITableView().then {
@@ -27,7 +31,10 @@ class BookFinderViewController: UIViewController {
     $0.searchBar.searchTextField.autocapitalizationType = .none
   }
     
-  let viewModel = BookViewModel()
+  var interactor: BookFinderInteractable?
+  
+  var items = BehaviorRelay<[ViewModel.Item]>(value: [])
+  var totalItems = BehaviorRelay<String?>(value: nil)
   
   private var disposeBag = DisposeBag()
 
@@ -36,6 +43,7 @@ class BookFinderViewController: UIViewController {
    
     setupViews()
     setupConstraints()
+    setupVIPs()
     bindUIs()
   }
 }
@@ -56,40 +64,50 @@ extension BookFinderViewController {
     }
   }
   
+  func setupVIPs() {
+    let viewer = self
+    let interactor = BookFinderInteractor()
+    let presentor = BookFinderPresenter()
+    
+    viewer.interactor = interactor
+    interactor.presenter = presentor
+    presentor.viewer = viewer
+  }
+  
   func bindUIs() {
-    viewModel.resultText.asDriver()
+    totalItems.asDriver()
       .drive(navigationItem.rx.prompt)
       .disposed(by: disposeBag)
-    
-    viewModel.items.asDriver()
+
+    items.asDriver()
       .drive(tableView.rx.items, curriedArgument: configureCell)
       .disposed(by: disposeBag)
-        
+
     tableView.rx.itemSelected.asDriver()
       .drive(onNext: deselectRow)
       .disposed(by: disposeBag)
-      
-    tableView.rx.modelSelected(BookViewModel.Item.self).asDriver()
+
+    tableView.rx.modelSelected(ViewModel.Item.self).asDriver()
       .drive(onNext: showDetail)
       .disposed(by: disposeBag)
-    
+
     tableView.rx.prefetchRows
       .compactMap(\.last?.row)
       .subscribe(onNext: prefetchRows)
       .disposed(by: disposeBag)
-    
+        
     searchController.searchBar.rx.text
       .orEmpty
       .throttle(.milliseconds(300), scheduler: MainScheduler.instance)
       .distinctUntilChanged()
-      .`do`(onNext: viewModel.reset)
-      .subscribe(onNext: viewModel.search)
+      .`do`(onNext: prepareForFetch)
+      .subscribe(onNext: fetchBooks)
       .disposed(by: disposeBag)
         
-    func configureCell(tableView: UITableView, row: Int, state: BookViewModel.Item) -> UITableViewCell {
+    func configureCell(tableView: UITableView, row: Int, item: ViewModel.Item) -> UITableViewCell {
       let indexPath = IndexPath(row: row, section: 0)
       
-      switch state {
+      switch item {
       case let .result(volume):
         let cell = tableView.dequeueReusableCell(for: indexPath) as BookCell
         cell.configure(volume)
@@ -107,7 +125,7 @@ extension BookFinderViewController {
       tableView.deselectRow(at: indexPath, animated: true)
     }
     
-    func showDetail(of state: BookViewModel.Item) {
+    func showDetail(of state: ViewModel.Item) {
       guard case .result(let volume) = state else { return }
       
       let view = BookDetailView(volume: volume)
@@ -116,10 +134,25 @@ extension BookFinderViewController {
     }
     
     func prefetchRows(row: Int) {
-      guard row == viewModel.items.value.count - 1 else { return }
+      guard row == items.value.count - 1 else { return }
       guard let text = searchController.searchBar.text else { return }
-      
-      viewModel.search(for: text)
+      fetchBooks(text: text)
     }
+  }
+}
+
+extension BookFinderViewController: BookFinderViewable {
+  func prepareForFetch(_: String) {
+    interactor?.prepareForFetch()
+  }
+  
+  func fetchBooks(text: String) {
+    let request = Request(searchText: text)
+    interactor?.fetchBooks(request: request)
+  }
+  
+  func displayFetchedBooks(viewModel: ViewModel) {
+    items.accept(viewModel.items)
+    totalItems.accept(viewModel.totalItems)
   }
 }
